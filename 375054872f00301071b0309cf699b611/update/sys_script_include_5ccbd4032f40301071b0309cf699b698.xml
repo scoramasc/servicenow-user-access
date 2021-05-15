@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>global.UserUtil</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Utility methods used for user access and control</description>
+        <name>UserUtil</name>
+        <script><![CDATA[var UserUtil = Class.create();
+UserUtil.prototype = {
+	initialize: function() {
+	},
+
+	// Removes a list of groups from a users groupmembership 
+	removeUserGroupMember: function(user, groupList){
+		var grGroupMemberRemove = new GlideRecord('sys_user_grmember');
+		grGroupMemberRemove.addQuery('user', user);
+		grGroupMemberRemove.addQuery('sys_id', 'IN', groupList);
+		grGroupMemberRemove.query();
+		if(grGroupMemberRemove.next()){
+			grGroupMemberRemove.deleteMultiple();
+		}
+
+	},
+	// Adds a list of groups from to users groupmembership
+	addUserGroupMember: function(user, groupList){
+		var grGroupMemberAdd = new GlideRecord('sys_user_grmember');
+		for(var i = 0; i < groupList.length; i++){
+			grGroupMemberAdd.initialize();
+			grGroupMemberAdd.setValue('user', user);
+			grGroupMemberAdd.setValue('group', groupList[i]);
+			grGroupMemberAdd.insert();
+		}
+	},
+
+	type: 'UserUtil'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-05-15 09:15:53</sys_created_on>
+        <sys_id>5ccbd4032f40301071b0309cf699b698</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>UserUtil</sys_name>
+        <sys_package display_value="User Access" source="375054872f00301071b0309cf699b611">375054872f00301071b0309cf699b611</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="User Access">375054872f00301071b0309cf699b611</sys_scope>
+        <sys_update_name>sys_script_include_5ccbd4032f40301071b0309cf699b698</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-05-15 09:15:53</sys_updated_on>
+    </sys_script_include>
+</record_update>

@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+
+	// Initializing global variables
+	var c = this;
+	var groupListRemove = [];
+	var groupListAdd = [];
+	c.data.add = false;
+	c.data.remove = false;
+	c.data.addRemove = '';
+
+
+	/*** Remove selected groups ***/
+	c.addGroups = function(){
+		// check if any groups are selected
+		if(groupListAdd.length < 1){
+			alert('No groups selected');
+			return;
+		}
+
+		// Prepare a list of sys_id for groups to remove
+		var add = [];
+		for(var i = 0; i < groupListAdd.length; i++){
+			add.push(c.data.groups[groupListAdd[i]].sysId);
+		}
+
+		// Call server to add selected groups to user profile
+		c.server.get({
+			action: 'addGroup',
+			userId: c.data.user.userId,
+			groups: add
+		}).then(function(r) {
+			c.resetLists();
+			c.showCurrentGroups();
+		});
+	};
+
+	/*** Helper function for c.markGroup ***/
+	c.addToList = function(index, list){
+		if(list.indexOf(index) > -1){
+			list.splice(list.indexOf(index), 1);
+		}
+		// Else add index to groupListRemove.
+		else{
+			list.push(index);
+		}
+	};
+
+	/*** Make a list of groups to remove ***/
+	c.markGroup = function(index){
+
+		// Check if action is add or remove
+		if(c.data.remove){
+			c.addToList(index, groupListRemove);
+		}
+		else if(c.data.add){
+			c.addToList(index, groupListAdd);
+		}
+	};
+
+	/*** Alert if user is not selected ***/
+	c.missingUser = function(){
+		if(!c.data.user.userId){
+			alert('No user selected');
+			return false;
+		}
+		return true;
+	};
+
+	/*** Remove selected groups ***/
+	c.removeGroups = function(){
+		if(groupListRemove.length < 1){
+			alert('No groups selected');
+			return;
+		}
+		// Prepare a list of sys_id for groups to remove
+		var remove = [];
+		for(var i = 0; i < groupListRemove.length; i++){
+			remove.push(c.data.groups[groupListRemove[i]].sysId);
+		}
+
+		c.server.get({
+			action: 'removeGroup',
+			userId: c.data.user.userId,
+			groups: remove
+		}).then(function(r) {
+			c.resetLists();
+			c.showCurrentGroups();
+		});
+	};
+
+	/*** Helper function, clearing lists for add/remove groups ***/
+	c.resetLists = function(){
+		groupListRemove = [];
+		groupListAdd = [];
+	};
+
+	/*** set selected user ***/
+	c.setUser = function(user){
+		if(!user){
+			alert('User is not selected.');
+			return;
+		}
+		c.data.user.userId = user;
+		c.server.get({
+			action: 'getUser',
+			userId: c.data.user.userId
+		}).then(function(r){
+			if(r.data.user.name){
+				c.data.user.name = r.data.user.name;
+				c.data.userId = r.data.user.userId;
+			}
+			else{
+				alert('User Id not identified');
+			}
+		});
+	};
+
+	/*** Show current groups for selected user ***/
+	c.showCurrentGroups = function(){
+		// Verify that user is selected
+		if(!c.missingUser()){
+			return;
+		}
+
+		// Initialize variables
+		c.resetLists();
+		c.data.add = false;
+		c.data.remove = true;
+		c.data.addRemove = 'Select groups to remove';
+
+		// Send request to server and update client side data
+		c.server.get({
+			action: 'currentGroup',
+			userId: c.data.user.userId
+		}).then(function(r) {
+			c.data.groups = r.data.groups;
+		});		
+	};
+
+	/*** Show a list of selectable groups ***/
+	c.showSelectableGroups = function(){
+		// Verify that user is selected
+		if(!c.missingUser()){
+			return;
+		}
+
+		// Initialize variables
+		c.resetLists();
+		c.data.add = true;
+		c.data.remove = false;
+		c.data.addRemove = 'Select groups to add';
+
+		// Call server to lookup a list of selectable groups
+		c.server.get({
+			action: 'selectableGroup',
+			userId: c.data.user.userId
+		}).then(function(r) {
+			c.data.groups = r.data.groups;
+		});
+	};
+};
+
+
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>header {&#13;
+  display: grid;&#13;
+  grid-template-columns: 2fr 1fr 1fr 1fr;&#13;
+  grid-template-rows: 30px;&#13;
+  height: 100px;&#13;
+  font-size: 1.8rem&#13;
+}&#13;
+&#13;
+.user-info input button{&#13;
+  height: 30px;&#13;
+}&#13;
+&#13;
+.user-info-button{&#13;
+  width: 150px;&#13;
+  font-weight: bold;&#13;
+}&#13;
+&#13;
+.table {&#13;
+  font-size: 1.8rem&#13;
+}&#13;
+.table-header {&#13;
+  display: grid;&#13;
+  grid-template-columns: 1fr 2fr 1fr;&#13;
+  grid-template-rows: auto;&#13;
+}&#13;
+&#13;
+.table-row {&#13;
+  display: grid;&#13;
+  grid-template-columns: 1fr 2fr 1fr;&#13;
+  grid-template-rows: auto; &#13;
+}&#13;
+&#13;
+.list-header {&#13;
+  flex: 1 1 auto;&#13;
+  background-color: lightgray;&#13;
+  font-weight: bold;&#13;
+  border-top: 0.5px solid black;&#13;
+  border-bottom: 0.5px solid black;&#13;
+}&#13;
+&#13;
+.list-item {&#13;
+  flex: 1 1 auto;&#13;
+  background-color: white;&#13;
+  border-bottom: 0.5px solid black;&#13;
+}&#13;
+&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>user_access_groups</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>User Access Groups</name>
+        <option_schema>[{"name":"title","section":"Presentation","default_value":"User rights","label":"Title","type":"string"},{"hint":"Select to enable approval workflow on new group relations","name":"approval_workflow","section":"other","default_value":"false","label":"Approval Workflow","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	/***
+	This widget is developed in a scoped application (Human Ressources: Service Portal)
+	Therefore actions performed on table 'sys_user_grmember' - which is part of Global 
+	scope -	is handled through script include 'UserUtil' which holds methods for adding
+	and removing relations between users and groups.
+	***/
+
+	// Initialize global variables
+	data.groups = [];
+	data.user = {
+		name: '',
+		userId: ''
+	};
+
+	// Input and user sent from client lookup users groups
+	if (input && input.userId) {
+		var grUser = new GlideRecord('sys_user');
+		grUser.addQuery('user_name', input.userId);
+		grUser.query();
+
+		// If user found set data.user
+		if(grUser.next()){
+			data.user.name = grUser.name.toString();
+			data.user.userId = grUser.user_name.toString();
+
+			// If action is currentGroup --> lookup users associated groups
+			if(input.action == 'currentGroup'){
+				var gr = new GlideRecord('sys_user_grmember');
+				gr.addQuery('user', grUser.sys_id);
+				gr.orderBy('group');
+				gr.query();
+				while(gr.next()){
+					var obj = {};
+					obj.name = gr.group.name.toString();
+					obj.description = gr.group.description.toString();
+					obj.sysId = gr.sys_id.toString();
+					data.groups.push(obj);
+				}
+			}
+
+			// If action is removeGroup --> delete groups
+			if(input.action == 'removeGroup'){
+				var userUtilRemove = new global.UserUtil();
+				userUtilRemove.removeUserGroupMember(grUser.sys_id, input.groups);
+			}
+
+			// If action is addGroup --> add groups
+			if(input.action == 'addGroup'){
+				if(options.approval_workflow == 'true'){
+					gs.info('SRC: Approval ' + input.groups);
+					var groupsList = input.groups;
+					var user = grUser.sys_id;
+					var grUserAccessApproval = new GlideRecord('u_user_access_approval');
+					for(var i = 0; i < groupsList.length; i++){
+						grUserAccessApproval.initialize();
+						grUserAccessApproval.setValue('u_user', user);
+						grUserAccessApproval.setValue('u_group', groupsList[i]);
+						grUserAccessApproval.setValue('u_approval_type', 'Group');
+						grUserAccessApproval.setValue('active', true);
+						grUserAccessApproval.insert();
+					}
+				}
+				else {
+					gs.info('SRC: No approval ' + options.approval_workflow);
+					var userUtilAdd = new global.UserUtil();
+					userUtilAdd.addUserGroupMember(grUser.sys_id, input.groups);
+				}
+			}			
+
+			// Lookup all selectable groups
+			if(input.action == 'selectableGroup'){
+				var groupList = [];
+				var grGroupMember = new GlideRecord('sys_user_grmember');
+				grGroupMember.addQuery('user', grUser.sys_id);
+				grGroupMember.query();
+				while(grGroupMember.next()){
+					groupList.push(grGroupMember.group.sys_id);
+				}
+
+				var grGroup = new GlideRecord('sys_user_group');
+				grGroup.addQuery('sys_id', 'NOT IN', groupList);
+				grGroup.orderBy('name');
+				grGroup.query();
+				while(grGroup.next()){
+					var obj_ = {};
+					obj_.name = grGroup.name.toString();
+					obj_.description = grGroup.description.toString();
+					obj_.sysId = grGroup.sys_id.toString();
+					data.groups.push(obj_);
+				}
+			}			
+		}
+	}
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-05-15 08:58:03</sys_created_on>
+        <sys_id>8617d04f2f00301071b0309cf699b67d</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>User Access Groups</sys_name>
+        <sys_package display_value="User Access" source="375054872f00301071b0309cf699b611">375054872f00301071b0309cf699b611</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="User Access">375054872f00301071b0309cf699b611</sys_scope>
+        <sys_update_name>sp_widget_8617d04f2f00301071b0309cf699b67d</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-05-15 10:14:44</sys_updated_on>
+        <template><![CDATA[<!-- Select user and functions -->
+<header ng-app="" class="user-info">
+  <div>
+    <p>{{::options.title}}</p>
+    <div>
+      <input type="text" ng-model="userId" placeholder="Type user-id"/>
+      <button class="user-info-button" type="button" ng-click="c.setUser(userId)">
+        Select User  
+      </button>
+    </div>
+    <p></p>
+    <div>
+      Selected User: {{data.user.name}}
+    </div>    
+  </div>
+  <div>
+    <p>Current Groups</p>    
+    <button class="user-info-button" type="button" ng-click="c.showCurrentGroups()">
+      Show Groups  
+    </button>
+  </div>
+  <div>
+    <p>Selectable Groups</p>    
+    <button class="user-info-button" type="button" ng-click="c.showSelectableGroups()">
+      Show Groups  
+    </button>
+  </div>  
+  <div>
+    <div ng-if="c.data.add">
+      <p>Groups to add</p>
+      <div>
+        <button class="user-info-button" type="button" ng-click="c.addGroups()">
+          Add Groups  
+        </button>
+      </div>
+    </div>
+    <div  ng-if="c.data.remove">
+      <p>Groups to Remove</p>
+      <div>
+        <button class="user-info-button" type="button" ng-click="c.removeGroups()">
+          Remove Groups  
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- List of selected groups -->
+<div class='table'>
+  <div class="table-header">
+    <div class="list-header">Group</div>
+    <div class="list-header">Description</div>
+    <div class="list-header">{{c.data.addRemove}}</div>
+  </div>
+  <div class="table-row" ng-repeat="group in data.groups">
+    <div class="list-item">{{group.name}}</div>
+    <div class="list-item">{{group.description}}</div>
+    <div class="list-item" style="text-align: center;"><input type="checkbox" ng-click="c.markGroup($index)"></div>
+  </div>
+</div>
+
+]]></template>
+    </sp_widget>
+</record_update>

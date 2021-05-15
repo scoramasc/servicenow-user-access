@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element extends="task" label="User Access Approval" max_length="40" name="u_user_access_approval" sizeclass="1" type="collection">
+        <element label="Group" max_length="40" name="u_group" reference="sys_user_group" type="reference"/>
+        <element label="user" max_length="40" name="u_user" reference="sys_user" type="reference"/>
+    </element>
+</database>
