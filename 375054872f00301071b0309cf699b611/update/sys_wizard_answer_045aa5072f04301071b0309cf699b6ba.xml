@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_wizard_answer">
+    <sys_wizard_answer action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <answer>User Access Approval</answer>
+        <button_label/>
+        <dependent_value/>
+        <element/>
+        <name>User Access Approval</name>
+        <next_question/>
+        <order>100</order>
+        <payload_name/>
+        <question display_value="Task" name="Task">e56db0c76d2220100acb70b3534330b7</question>
+        <roles/>
+        <script/>
+        <sys_class_name>sys_wizard_answer</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-05-15 14:58:11</sys_created_on>
+        <sys_id>045aa5072f04301071b0309cf699b6ba</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>User Access Approval</sys_name>
+        <sys_package display_value="User Access" source="375054872f00301071b0309cf699b611">375054872f00301071b0309cf699b611</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="User Access">375054872f00301071b0309cf699b611</sys_scope>
+        <sys_update_name>sys_wizard_answer_045aa5072f04301071b0309cf699b6ba</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-05-15 14:58:11</sys_updated_on>
+        <table/>
+        <target_url>u_user_access_approval.do</target_url>
+        <type>1</type>
+    </sys_wizard_answer>
+</record_update>
