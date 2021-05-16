@@ -166,52 +166,52 @@
 
 ]]></client_script>
         <controller_as>c</controller_as>
-        <css>header {&#13;
-  display: grid;&#13;
-  grid-template-columns: 2fr 1fr 1fr 1fr;&#13;
-  grid-template-rows: 30px;&#13;
-  height: 100px;&#13;
-  font-size: 1.8rem&#13;
-}&#13;
-&#13;
-.user-info input button{&#13;
-  height: 30px;&#13;
-}&#13;
-&#13;
-.user-info-button{&#13;
-  width: 150px;&#13;
-  font-weight: bold;&#13;
-}&#13;
-&#13;
-.table {&#13;
-  font-size: 1.8rem&#13;
-}&#13;
-.table-header {&#13;
-  display: grid;&#13;
-  grid-template-columns: 1fr 2fr 1fr;&#13;
-  grid-template-rows: auto;&#13;
-}&#13;
-&#13;
-.table-row {&#13;
-  display: grid;&#13;
-  grid-template-columns: 1fr 2fr 1fr;&#13;
-  grid-template-rows: auto; &#13;
-}&#13;
-&#13;
-.list-header {&#13;
-  flex: 1 1 auto;&#13;
-  background-color: lightgray;&#13;
-  font-weight: bold;&#13;
-  border-top: 0.5px solid black;&#13;
-  border-bottom: 0.5px solid black;&#13;
-}&#13;
-&#13;
-.list-item {&#13;
-  flex: 1 1 auto;&#13;
-  background-color: white;&#13;
-  border-bottom: 0.5px solid black;&#13;
-}&#13;
-&#13;
+        <css>.top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-rows: 30px;
+  height: 100px;
+  font-size: 1.8rem
+}
+
+.color-dark-blue{
+  color: darkblue;
+}
+
+.user-info-button{
+  width: 150px;
+  font-weight: bold;
+}
+
+.table {
+  font-size: 1.8rem
+}
+.table-header {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto; 
+}
+
+.list-header {
+  flex: 1 1 auto;
+  background-color: lightgray;
+  font-weight: bold;
+  border-top: 0.5px solid black;
+  border-bottom: 0.5px solid black;
+}
+
+.list-item {
+  flex: 1 1 auto;
+  background-color: white;
+  border-bottom: 0.5px solid black;
+}
+
 </css>
         <data_table>sp_instance</data_table>
         <demo_data/>
@@ -329,16 +329,16 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2021-05-15 08:58:03</sys_created_on>
         <sys_id>8617d04f2f00301071b0309cf699b67d</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>7</sys_mod_count>
         <sys_name>User Access Groups</sys_name>
-        <sys_package display_value="User Access" source="375054872f00301071b0309cf699b611">375054872f00301071b0309cf699b611</sys_package>
+        <sys_package display_value="User Access Service Portal" source="375054872f00301071b0309cf699b611">375054872f00301071b0309cf699b611</sys_package>
         <sys_policy/>
-        <sys_scope display_value="User Access">375054872f00301071b0309cf699b611</sys_scope>
+        <sys_scope display_value="User Access Service Portal">375054872f00301071b0309cf699b611</sys_scope>
         <sys_update_name>sp_widget_8617d04f2f00301071b0309cf699b67d</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2021-05-15 10:14:44</sys_updated_on>
+        <sys_updated_on>2021-05-16 12:54:48</sys_updated_on>
         <template><![CDATA[<!-- Select user and functions -->
-<header ng-app="" class="user-info">
+<div ng-app="" class="top">
   <div>
     <p>{{::options.title}}</p>
     <div>
@@ -348,7 +348,7 @@
       </button>
     </div>
     <p></p>
-    <div>
+    <div class="color-dark-blue">
       Selected User: {{data.user.name}}
     </div>    
   </div>
@@ -382,7 +382,7 @@
       </div>
     </div>
   </div>
-</header>
+</div>
 
 <!-- List of selected groups -->
 <div class='table'>
