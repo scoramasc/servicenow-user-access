@@ -1,8 +1,7 @@
 # Servicenow User Access Portal
 ### Description
 A serviceportal for viewing, addding and removing user-groups related to individual users.  
-Includes approval workflow, which can be turned off.
-
+Includes approval workflow, which can be selected on widget options.
 ### Usage
 ServiceNow User Access Portal is free to use.  
 Installation an use of the portal - or any port of it - is at your own risk.  
